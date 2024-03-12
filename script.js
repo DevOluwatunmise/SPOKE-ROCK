@@ -43,6 +43,9 @@ function resetSelected(){
     allGameIcons.forEach((icon) => {
         icon.classList.remove('selected')
     })
+
+    stopConfettiInner()
+    removeConfettiInner()
 }
 
 //game reset
@@ -91,6 +94,7 @@ function updateScores(playerChoice){
         console.log(choice.defeats.indexOf(computerChoice))
 
     if(choice.defeats.indexOf(computerChoice) > -1){
+        startConfetti()
         resultText.textContent = 'you won';
         playerScoreNumber++
         playerScoreEl.textContent = playerScoreNumber
@@ -218,19 +222,35 @@ var removeConfetti; //call to stop the confetti animation and remove all confett
 					return window.setTimeout(callback, 16.6666667);
 				};
 		})();
-		var canvas = document.getElementById("confetti-canvas");
-		if (canvas === null) {
-			canvas = document.createElement("canvas");
-			canvas.setAttribute("id", "confetti-canvas");
-			canvas.setAttribute("style", "display:block;z-index:999999;pointer-events:none");
-			document.body.appendChild(canvas);
-			canvas.width = width;
-			canvas.height = height;
-			window.addEventListener("resize", function() {
-				canvas.width = window.innerWidth;
-				canvas.height = window.innerHeight;
-			}, true);
-		}
+		// var canvas = document.getElementById("confetti-canvas");
+		// if (canvas === null) {
+		// 	canvas = document.createElement("canvas");
+		// 	canvas.setAttribute("id", "confetti-canvas");
+		// 	canvas.setAttribute("style", "display:block;z-index:999999;pointer-events:none");
+		// 	document.body.appendChild(canvas);
+		// 	canvas.width = width;
+		// 	canvas.height = height;
+		// 	window.addEventListener("resize", function() {
+		// 		canvas.width = window.innerWidth;
+		// 		canvas.height = window.innerHeight;
+		// 	}, true);
+		// }
+
+        var canvas = document.getElementById('confetti-canvas');
+        if(canvas === null){
+            canvas = document.createElement('canvas');
+            canvas.setAttribute('id', 'confetti-canvas');
+            canvas.setAttribute("style", "position: absolute; top: 0; left: 0; pointer-events: none; z-index: 999;");
+            document.body.appendChild(canvas);
+            canvas.width = width;
+            canvas.height = height;
+            window.addEventListener("resize", function(){
+                canvas.width = window.innerWidth;
+                canvas.height = this.innerHeight
+            }, true)
+        }
+
+
 		var context = canvas.getContext("2d");
 		while (particles.length < maxParticleCount)
 			particles.push(resetParticle({}, width, height));
@@ -254,7 +274,7 @@ var removeConfetti; //call to stop the confetti animation and remove all confett
 	}
 
 	function removeConfettiInner() {
-		stopConfetti();
+		stopConfettiInner();
 		particles = [];
 	}
 
@@ -305,3 +325,5 @@ var removeConfetti; //call to stop the confetti animation and remove all confett
 			}
 		}
 	}
+
+
